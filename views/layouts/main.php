@@ -61,7 +61,7 @@ AppAsset::register($this);
                 margin-top: 28px;
             }
         </style>
-        <!--<link href="/css/bootstrap-responsive.css" rel="stylesheet" media="screen">-->
+        <link href="/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
         <?= Html::csrfMetaTags() ?>
 		<title><?= Html::encode($this->title) ?></title>
 		<?php $this->head() ?>
@@ -139,25 +139,17 @@ AppAsset::register($this);
     <script type="text/javascript">
 
         $(document).ready(function () {
+            /*
+            * Initializations start.
+            */
+            /*
+            Setting the cookie options
+             */
             Cookies.json = true;
-            var cookieVal = Cookies.get("defaultTimeVariables")
-            if (typeof cookieVal === "undefined"){
-                var defaultTimeVariables = new Object();
-                defaultTimeVariables.pomoroDuration = 8;
-                defaultTimeVariables.shortBreakDuration = 3;
-                defaultTimeVariables.longBreakDuration = 5;
-                defaultTimeVariables.rounds = 4;
-                Cookies.set("defaultTimeVariables", JSON.stringify(defaultTimeVariables), {expires: 1});
-            }else{
-                var defaultTimeVariables = cookieVal;
-            }
 
-            var currentPomodoroRounds = 0;
-            var pr = 0;
-            var sd = 0;
-            var ld = 0;
-            var started = false;
-
+            /*
+            JS Config for notification sounds
+             */
             ion.sound({
                 sounds: [
                     {
@@ -171,6 +163,45 @@ AppAsset::register($this);
                 preload: true
             });
 
+            /*
+		   Other variables required for managing the timers
+			*/
+            var currentPomodoroRounds = 0;
+            var pr = 0;
+            var sd = 0;
+            var ld = 0;
+            var started = false;
+            /*
+			* Initializations end.
+			*/
+
+
+            /*
+            Check if Pomodoro timer was used before.
+                - If yes, pull up same config
+                - If not, create an object with some default values.
+             */
+            var cookieVal = Cookies.get("defaultTimeVariables")
+            if (typeof cookieVal === "undefined"){
+                var defaultTimeVariables = new Object();
+                defaultTimeVariables.pomoroDuration = 8;
+                defaultTimeVariables.shortBreakDuration = 3;
+                defaultTimeVariables.longBreakDuration = 5;
+                defaultTimeVariables.rounds = 4;
+
+                //Set the expiry of timer for 1 day
+                Cookies.set("defaultTimeVariables", JSON.stringify(defaultTimeVariables), {expires: 1});
+            }else{
+                var defaultTimeVariables = cookieVal;
+            }
+
+            /*
+			* Timer functionality related functions.
+			*/
+            /*
+            Timer/Counter object which handles all the start
+            and stop events.
+             */
             var clockObj = $('.clock').FlipClock({
                 autoStart: false,
                 countdown: true,
@@ -222,6 +253,9 @@ AppAsset::register($this);
                 }
             });
 
+            /*
+            Start timer triggers the counter.
+             */
             $('#startTimer').click(function () {
                 clockObj.setTime(defaultTimeVariables.pomoroDuration);
                 started = true;
@@ -230,6 +264,9 @@ AppAsset::register($this);
 
             });
 
+            /*
+            Stop timer stops the counter.
+             */
             $('#stopTimer').click(function () {
                 started = false;
                 clockObj.stop();
@@ -237,7 +274,9 @@ AppAsset::register($this);
                 clockObj.reset()
             });
 
-
+            /*
+            Below method updates the default config values for counter.
+             */
             $('#configForm').validator().on('submit', function (e) {
                 e.preventDefault();
                 $('#myModal').modal('hide');

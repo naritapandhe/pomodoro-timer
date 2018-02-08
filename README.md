@@ -1,5 +1,4 @@
-# Pomodoro Timer
----
+
 * An attempt to boost my productivity, I have developed this timer based on the Pomodoro technique. Main premise behind this technique is to work in blocks of time.
 
 * Throughout the day, you budget your time into short increments and take breaks periodically. You work for 25 minutes, then take break for five minutes.

@@ -13,6 +13,9 @@ $config = [
     ],
     'components' => [
         'request' => [
+			/*'parsers' => [
+				'application/json' => 'yii\web\JsonParser',
+			],*/
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'qgl5mmcuv7gh1iCdNk0esPVxxSZzJdcR',
         ],
@@ -21,7 +24,7 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

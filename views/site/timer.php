@@ -11,11 +11,38 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <hr>
+    <div class="jumbotron hero-unit" style="background-color: #e27677">
+        <div class="row">
+            <div class="span1">
+            </div>
+            <div class="span4">
+                <div class="clock">
 
-    <div class="jumbotron hero-unit">
-        <h1>Super awesome marketing speak!</h1>
-        <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-        <a class="btn btn-large btn-success" href="#">Sign up today</a>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="row-fluid" style="padding: 10px;">
+                    <button type="button" class="btn btn-large" id="startTimer"><i class="icon-play"></i> Start Timer </button>
+                </div>
+                <div class="row"></div>
+                <div class="row-fluid" style="padding: 10px;">
+                    <button type="button" class="btn btn-large" id="stopTimer"><i class="icon-stop"></i> Stop Timer </button>
+                </div>
+            </div>
+            <div class="span1">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
     </div>
 
     <hr>
@@ -47,3 +74,4 @@ $this->params['breadcrumbs'][] = $this->title;
     <hr>
 
 </div>
+

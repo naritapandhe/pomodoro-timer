@@ -19,7 +19,8 @@ AppAsset::register($this);
 		<meta charset="<?= Yii::$app->charset ?>">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="css/bootstrap.css" rel="stylesheet" media="screen">
+        <link href="/css/bootstrap.css" rel="stylesheet" media="screen">
+        <link href="/css/flipclock.css" rel="stylesheet">
         <style type="text/css">
             body {
                 padding-top: 20px;
@@ -45,7 +46,7 @@ AppAsset::register($this);
                 line-height: 1;
             }
             .jumbotron .btn {
-                font-size: 21px;
+                font-size: 18px;
                 padding: 14px 24px;
             }
 
@@ -57,7 +58,7 @@ AppAsset::register($this);
                 margin-top: 28px;
             }
         </style>
-        <link href="css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+        <!--<link href="/css/bootstrap-responsive.css" rel="stylesheet" media="screen">-->
         <?= Html::csrfMetaTags() ?>
 		<title><?= Html::encode($this->title) ?></title>
 		<?php $this->head() ?>
@@ -68,12 +69,12 @@ AppAsset::register($this);
 	<div class="wrap">
         <div class="container-narrow masthead">
             <ul class="nav nav-pills pull-right">
-                <li class="active"><a href="/site/timer">Home</a></li>
-                <li><a href="/site/about">About</a></li>
-                <li><a href='/site/login'>Login</a></li>
+                <li><a href="/site/timer"><h5 class="muted">Home</h5></a></li>
+                <li><a href="/site/about"><h5 class="muted">About</h5></a></li>
+                <li><a href='/site/login'><h5 class="muted">Login</h5></a></li>
                 <!--<li><a href="#">Contact</a></li>-->
             </ul>
-            <h3 class="muted">Pomodoro Timer</h3>
+            <h2>Pomodoro Timer</h2>
         </div>
 
         <?php
@@ -125,7 +126,85 @@ AppAsset::register($this);
 
 	<?php $this->endBody() ?>
     <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-	</body>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/flipclock.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var defaultTimeVariables = new Object();
+            defaultTimeVariables.pomoroDuration = 8;
+            defaultTimeVariables.shortBreakDuration = 3;
+            defaultTimeVariables.longBreakDuration = 5;
+            defaultTimeVariables.rounds = 4;
+            pr = 0;
+            sd = 0;
+            ld = 0;
+            started = false;
+
+            var currentPomodoroRounds = 0;
+            var clockObj = $('.clock').FlipClock({
+                autoStart: false,
+                countdown: true,
+                clockFace: 'MinuteCounter',
+                callbacks: {
+                    stop: function() {
+                        t = clockObj.getTime();
+                        if(t<=0 && started){
+                            started = false
+                            if (sd == 0 && ld == 0){
+                                currentPomodoroRounds = currentPomodoroRounds+1
+                                if (currentPomodoroRounds < defaultTimeVariables.rounds){
+                                    sd=1;
+                                    console.log('sd started...')
+                                    started = true;
+                                    clockObj.setTime(defaultTimeVariables.shortBreakDuration);
+                                    clockObj.start();
+
+                                }else{
+                                    ld=1;
+                                    console.log('ld started...')
+                                    started = true;
+                                    clockObj.setTime(defaultTimeVariables.longBreakDuration);
+                                    clockObj.start();
+                                }
+
+                            }else if (sd == 1){
+                                sd = 0;
+                                started = true;
+                                console.log('sd finished...normal round started...');
+                                clockObj.setTime(defaultTimeVariables.pomoroDuration);
+                                clockObj.start();
+                            }else if (ld == 1){
+                                console.log('long break finished. normal round started......')
+                                sd = 0;
+                                ld = 0;
+                                started = true;
+                                clockObj.setTime(defaultTimeVariables.pomoroDuration);
+                                clockObj.start();
+                            }
+                        }
+                    },
+                }
+            });
+
+            $('#startTimer').click(function () {
+                clockObj.setTime(defaultTimeVariables.pomoroDuration);
+                started = true;
+                clockObj.start();
+
+            });
+
+            $('#stopTimer').click(function () {
+                started = false;
+                clockObj.stop()
+            });
+
+
+        })
+
+    </script>
+
+    </body>
 	</html>
 <?php $this->endPage() ?>

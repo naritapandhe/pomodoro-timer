@@ -35,6 +35,12 @@ class SiteController extends Controller
                     'logout' => ['post'],
                 ],
             ],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'login2' => ['post'],
+				],
+			],
         ];
     }
 
@@ -71,6 +77,9 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+    	echo "in actionlogin";
+    	die();
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -136,7 +145,26 @@ class SiteController extends Controller
 
 	public function actionSay($message = 'Hello')
 	{
-		return $this->render('say', ['message' => $message]);
+		echo "here";
+		die();
+
+		$response = Yii::$app->response;
+		$response->format = \yii\web\Response::FORMAT_JSON;
+		$response->data = ['message' => $message];
+		return $response;
+		//return $this->render('say', ['message' => $message]);
+	}
+
+	public function actionLogin2()
+	{
+		echo "actionLogin2";
+		die();
+
+		$response = Yii::$app->response;
+		$response->format = \yii\web\Response::FORMAT_JSON;
+		$response->data = ['message' => $message];
+		return $response;
+		//return $this->render('say', ['message' => $message]);
 	}
 
 

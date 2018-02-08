@@ -121,12 +121,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <h4>Pomodoro and Pomodori</h4>
             <p>
             The Pomodoro Technique uses a timer to break down work into intervals traditionally 25 minutes in length (pomodori), separated by short breaks. The method is based on the idea that frequent breaks can improve mental agility.</p>
-
-            <h4>Acknowledgments</h4>
-            <ul>
-                <li><a href="https://pomodoro-tracker.com/" target="_blank">pomodoro-tracker.com</a></li>
-                <li><a href="https://tomato-timer.com/" target="_blank">tomato-timer.com</a></li>
-            </ul>
         </div>
     </div>
 

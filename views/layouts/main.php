@@ -166,11 +166,61 @@ AppAsset::register($this);
             /*
 		   Other variables required for managing the timers
 			*/
-            var currentPomodoroRounds = 0;
-            var pr = 0;
-            var sd = 0;
-            var ld = 0;
-            var started = false;
+            var currentPomodoroRounds;
+            var shortDurationEnabled;
+            var longDurationEnabled;
+            var started;
+            function initializePomodoro(){
+                currentPomodoroRounds = 0;
+                shortDurationEnabled = 0;
+                longDurationEnabled = 0;
+                started = false;
+
+            }
+            initializePomodoro()
+
+            /*
+			* Helper functions.
+			*/
+            function startShortDuration(){
+                ion.sound.play("bell_ring");
+                shortDurationEnabled=1;
+                console.log('shortDurationEnabled started...');
+                started = true;
+                clockObj.setTime(defaultTimeVariables.shortBreakDuration);
+                $('#alert-text').html('Short Break :)');
+                clockObj.start();
+            }
+
+            function startLongDuration(){
+                ion.sound.play("bell_ring");
+                longDurationEnabled=1;
+                console.log('longDurationEnabled started...');
+                started = true;
+                clockObj.setTime(defaultTimeVariables.longBreakDuration);
+                $('#alert-text').html('Long Break ;)');
+                clockObj.start();
+            }
+
+            function stopShortDuration(){
+                shortDurationEnabled = 0;
+                started = true;
+                console.log('shortDurationEnabled finished...normal round started...');
+                $('#alert-text').html('Pomodoro Round: #'+(currentPomodoroRounds+1));
+                clockObj.setTime(defaultTimeVariables.pomoroDuration);
+                clockObj.start();
+            }
+
+            function stopLongDuration(){
+                console.log('long break finished. normal round started......');
+                initializePomodoro()
+                started = true;
+                clockObj.setTime(defaultTimeVariables.pomoroDuration);
+                $('#alert-text').html('Pomodoro: #'+(currentPomodoroRounds+1));
+                clockObj.start();
+
+            }
+
             /*
 			* Initializations end.
 			*/
@@ -184,9 +234,9 @@ AppAsset::register($this);
             var cookieVal = Cookies.get("defaultTimeVariables")
             if (typeof cookieVal === "undefined"){
                 var defaultTimeVariables = new Object();
-                defaultTimeVariables.pomoroDuration = 8;
-                defaultTimeVariables.shortBreakDuration = 3;
-                defaultTimeVariables.longBreakDuration = 5;
+                defaultTimeVariables.pomoroDuration = 20;
+                defaultTimeVariables.shortBreakDuration = 5;
+                defaultTimeVariables.longBreakDuration = 10;
                 defaultTimeVariables.rounds = 4;
 
                 //Set the expiry of timer for 1 day
@@ -195,83 +245,68 @@ AppAsset::register($this);
                 var defaultTimeVariables = cookieVal;
             }
 
-            /*
-			* Timer functionality related functions.
-			*/
+
+
             /*
             Timer/Counter object which handles all the start
             and stop events.
              */
-            var clockObj = $('.clock').FlipClock({
+            $('#stopTimer').attr('disabled',true);
+            var clockObj = $('.clock').FlipClock(defaultTimeVariables.pomoroDuration,{
                 autoStart: false,
                 countdown: true,
                 clockFace: 'MinuteCounter',
                 callbacks: {
                     stop: function() {
+
                         t = clockObj.getTime();
                         if(t<=0 && started){
                             started = false
-                            ion.sound.play("bell_ring");
-                            if (sd == 0 && ld == 0){
+
+                            if (shortDurationEnabled == 0 && longDurationEnabled == 0){
                                 currentPomodoroRounds = currentPomodoroRounds+1;
                                 if (currentPomodoroRounds < defaultTimeVariables.rounds){
-                                    sd=1;
-                                    console.log('sd started...');
-                                    started = true;
-                                    clockObj.setTime(defaultTimeVariables.shortBreakDuration);
-                                    $('#alert-text').html('Short Break :)');
-                                    clockObj.start();
-
+                                    startShortDuration();
                                 }else{
-                                    ld=1;
-                                    console.log('ld started...');
-                                    started = true;
-                                    clockObj.setTime(defaultTimeVariables.longBreakDuration);
-                                    $('#alert-text').html('Long Break ;)');
-                                    clockObj.start();
+                                    startLongDuration();
                                 }
 
-                            }else if (sd == 1){
-                                sd = 0;
-                                started = true;
-                                console.log('sd finished...normal round started...');
-                                $('#alert-text').html('Pomodoro Round: #'+(currentPomodoroRounds+1));
-                                clockObj.setTime(defaultTimeVariables.pomoroDuration);
-                                clockObj.start();
-                            }else if (ld == 1){
-                                console.log('long break finished. normal round started......');
-                                sd = 0;
-                                ld = 0;
-                                started = true;
-                                currentPomodoroRounds = 0;
-                                clockObj.setTime(defaultTimeVariables.pomoroDuration);
-                                $('#alert-text').html('Pomodoro: #'+(currentPomodoroRounds+1));
-                                clockObj.start();
+                            }else if (shortDurationEnabled == 1){
+                                stopShortDuration();
+
+                            }else if (longDurationEnabled == 1){
+                                stopLongDuration();
                             }
                         }
                     },
                 }
             });
 
+
             /*
             Start timer triggers the counter.
              */
+
             $('#startTimer').click(function () {
                 clockObj.setTime(defaultTimeVariables.pomoroDuration);
                 started = true;
                 $('#alert-text').html('Pomodoro: #'+(currentPomodoroRounds+1));
                 clockObj.start();
-
+                $('#stopTimer').attr('disabled',false);
+                $('#startTimer').attr('disabled',true);
             });
 
             /*
             Stop timer stops the counter.
              */
             $('#stopTimer').click(function () {
-                started = false;
                 clockObj.stop();
                 $('#alert-text').html('Start your pomodoros!!!');
                 clockObj.reset()
+                $('#startTimer').attr('disabled',false);
+                $('#stopTimer').attr('disabled',true);
+                initializePomodoro();
+                clockObj.setTime(defaultTimeVariables.pomoroDuration);
             });
 
             /*

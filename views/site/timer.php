@@ -16,8 +16,15 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="span1">
             </div>
             <div class="span4">
-                <div class="clock">
+                <div class="row">
+                    <div class="clock">
 
+                    </div>
+                </div>
+                <div class="row" style="width:320px">
+                     <div class="alert alert-block narrow">
+                         <span id="alert-text">Start your pomodoros!!!</span>
+                    </div>
                 </div>
             </div>
             <div class="span4">

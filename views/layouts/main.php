@@ -49,6 +49,9 @@ AppAsset::register($this);
                 font-size: 18px;
                 padding: 14px 24px;
             }
+            .alert {
+                padding: 5px;
+            }
 
             /* Supporting marketing content */
             .marketing {
@@ -128,10 +131,24 @@ AppAsset::register($this);
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/flipclock.min.js"></script>
+    <script src="/js/ion.sound.min.js"></script>
 
     <script type="text/javascript">
 
         $(document).ready(function () {
+            ion.sound({
+                sounds: [
+                    {
+                        name: "bell_ring",
+                        volume: 0.2,
+                        preload: false
+                    }
+                ],
+                volume: 0.2,
+                path: "/sounds/",
+                preload: true
+            });
+
             var defaultTimeVariables = new Object();
             defaultTimeVariables.pomoroDuration = 8;
             defaultTimeVariables.shortBreakDuration = 3;
@@ -152,20 +169,23 @@ AppAsset::register($this);
                         t = clockObj.getTime();
                         if(t<=0 && started){
                             started = false
+                            ion.sound.play("bell_ring");
                             if (sd == 0 && ld == 0){
-                                currentPomodoroRounds = currentPomodoroRounds+1
+                                currentPomodoroRounds = currentPomodoroRounds+1;
                                 if (currentPomodoroRounds < defaultTimeVariables.rounds){
                                     sd=1;
-                                    console.log('sd started...')
+                                    console.log('sd started...');
                                     started = true;
                                     clockObj.setTime(defaultTimeVariables.shortBreakDuration);
+                                    $('#alert-text').html('Short Break :)');
                                     clockObj.start();
 
                                 }else{
                                     ld=1;
-                                    console.log('ld started...')
+                                    console.log('ld started...');
                                     started = true;
                                     clockObj.setTime(defaultTimeVariables.longBreakDuration);
+                                    $('#alert-text').html('Long Break ;)');
                                     clockObj.start();
                                 }
 
@@ -173,14 +193,17 @@ AppAsset::register($this);
                                 sd = 0;
                                 started = true;
                                 console.log('sd finished...normal round started...');
+                                $('#alert-text').html('Pomodoro Round: #'+(currentPomodoroRounds+1));
                                 clockObj.setTime(defaultTimeVariables.pomoroDuration);
                                 clockObj.start();
                             }else if (ld == 1){
-                                console.log('long break finished. normal round started......')
+                                console.log('long break finished. normal round started......');
                                 sd = 0;
                                 ld = 0;
                                 started = true;
+                                currentPomodoroRounds = 0;
                                 clockObj.setTime(defaultTimeVariables.pomoroDuration);
+                                $('#alert-text').html('Pomodoro: #'+(currentPomodoroRounds+1))
                                 clockObj.start();
                             }
                         }
@@ -191,6 +214,7 @@ AppAsset::register($this);
             $('#startTimer').click(function () {
                 clockObj.setTime(defaultTimeVariables.pomoroDuration);
                 started = true;
+                $('#alert-text').html('Pomodoro: #'+(currentPomodoroRounds+1))
                 clockObj.start();
 
             });
@@ -198,6 +222,8 @@ AppAsset::register($this);
             $('#stopTimer').click(function () {
                 started = false;
                 clockObj.stop()
+                $('#alert-text').html('Start your pomodoros!!!')
+                clockObj.reset()
             });
 
 

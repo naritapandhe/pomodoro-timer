@@ -103,17 +103,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-
-            </div>
-            <div class="col-md-6">
-
-            </div>
-        </div>
-    </div>
-
     <hr>
 
     <div class="row-fluid marketing">

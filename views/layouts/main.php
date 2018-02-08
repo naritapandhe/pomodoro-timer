@@ -16,6 +16,7 @@ AppAsset::register($this);
 	<!DOCTYPE html>
 	<html lang="<?= Yii::$app->language ?>">
 	<head>
+
 		<meta charset="<?= Yii::$app->charset ?>">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -71,49 +72,14 @@ AppAsset::register($this);
 
 	<div class="wrap">
         <div class="container-narrow masthead">
-            <!-- <ul class="nav nav-pills pull-right">
-                <li><a href="/site/timer"><h5 class="muted">Home</h5></a></li>
-                <li><a href="/site/about"><h5 class="muted">About</h5></a></li>
-                <li><a href='/site/login'><h5 class="muted">Login</h5></a></li>
-                <!--<li><a href="#">Contact</a></li>
-            </ul> -->
+            <ul class="nav nav-pills pull-right">
+                <li><a href="/site/timer" class="muted">Home</a></li>
+                <li><a href='/site/login' class="muted">Login</a></li>
+            </ul>
             <h2>Pomodoro Timer</h2>
         </div>
 
-        <?php
-		/*NavBar::begin([
-			'brandLabel' => Yii::$app->name,
-			'brandUrl' => Yii::$app->homeUrl,
-			'options' => [
-				'class' => 'navbar-inverse navbar-fixed-top',
-			],
-		]);
-		echo Nav::widget([
-			'options' => ['class' => 'navbar-nav navbar-right'],
-			'items' => [
-				['label' => 'Home', 'url' => ['/site/index']],
-				['label' => 'Timer', 'url' => ['/site/timer']],
-				['label' => 'About', 'url' => ['/site/about']],
-				['label' => 'Contact', 'url' => ['/site/contact']],
-				Yii::$app->user->isGuest ? (
-				['label' => 'Login', 'url' => ['/site/login']]
-				) : (
-					'<li>'
-					. Html::beginForm(['/site/logout'], 'post')
-					. Html::submitButton(
-						'Logout (' . Yii::$app->user->identity->username . ')',
-						['class' => 'btn btn-link logout']
-					)
-					. Html::endForm()
-					. '</li>'
-				)
-			],
-		]);
-		NavBar::end();*/
-		?>
-
-		<div class="container">
-
+    	<div class="container">
 			<?= Alert::widget() ?>
 			<?= $content ?>
 		</div>
@@ -128,28 +94,27 @@ AppAsset::register($this);
 	</footer>
 
 	<?php $this->endBody() ?>
+    <!-- Javascript imports start  -->
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/flipclock.min.js"></script>
     <script src="/js/ion.sound.min.js"></script>
     <script src="/js/js.cookie.js"></script>
     <script src="http://1000hz.github.io/bootstrap-validator/dist/validator.min.js"></script>
-
+    <!-- Javascript imports end -->
 
     <script type="text/javascript">
 
         $(document).ready(function () {
-            /*
-            * Initializations start.
-            */
-            /*
-            Setting the cookie options
-             */
-            Cookies.json = true;
 
             /*
-            JS Config for notification sounds
+             * Declarations start
              */
+
+            // Setting the cookie options
+            Cookies.json = true;
+
+            // Javascript configuration for notification sounds
             ion.sound({
                 sounds: [
                     {
@@ -163,13 +128,18 @@ AppAsset::register($this);
                 preload: true
             });
 
-            /*
-		   Other variables required for managing the timers
-			*/
+            // Other variables required for managing the timers
             var currentPomodoroRounds;
             var shortDurationEnabled;
             var longDurationEnabled;
             var started;
+
+
+            /*
+		    * Helper functions.
+		    */
+
+            // Function to intialize all variables
             function initializePomodoro(){
                 currentPomodoroRounds = 0;
                 shortDurationEnabled = 0;
@@ -177,11 +147,8 @@ AppAsset::register($this);
                 started = false;
 
             }
-            initializePomodoro()
 
-            /*
-			* Helper functions.
-			*/
+            // Function to start short break
             function startShortDuration(){
                 ion.sound.play("bell_ring");
                 shortDurationEnabled=1;
@@ -192,6 +159,7 @@ AppAsset::register($this);
                 clockObj.start();
             }
 
+            // Function to start long break
             function startLongDuration(){
                 ion.sound.play("bell_ring");
                 longDurationEnabled=1;
@@ -202,6 +170,7 @@ AppAsset::register($this);
                 clockObj.start();
             }
 
+            // Function to stop short break
             function stopShortDuration(){
                 shortDurationEnabled = 0;
                 started = true;
@@ -211,6 +180,7 @@ AppAsset::register($this);
                 clockObj.start();
             }
 
+            // Function to stop long break
             function stopLongDuration(){
                 console.log('long break finished. normal round started......');
                 initializePomodoro()
@@ -221,16 +191,25 @@ AppAsset::register($this);
 
             }
 
-            /*
-			* Initializations end.
-			*/
-
+            // Disable stop timer button on page load
+            $('#stopTimer').attr('disabled',true);
 
             /*
-            Check if Pomodoro timer was used before.
-                - If yes, pull up same config
-                - If not, create an object with some default values.
+             * Declarations end
              */
+
+
+            /*
+            * Initializations start.
+            */
+
+            // Invoke intialization functions
+            initializePomodoro();
+
+
+            // Check if timer was used before.
+            //  - If yes, pull up same config values from cache
+            //  - If not, initialize new object with default values.
             var cookieVal = Cookies.get("defaultTimeVariables")
             if (typeof cookieVal === "undefined"){
                 var defaultTimeVariables = new Object();
@@ -245,13 +224,17 @@ AppAsset::register($this);
                 var defaultTimeVariables = cookieVal;
             }
 
+            /*
+			 * Initializations end.
+		     */
 
 
             /*
-            Timer/Counter object which handles all the start
-            and stop events.
-             */
-            $('#stopTimer').attr('disabled',true);
+            * Javascript functions to handle actions on button
+            * clicks.
+            */
+
+            // Timer object which handles all the start and stop events.
             var clockObj = $('.clock').FlipClock(defaultTimeVariables.pomoroDuration,{
                 autoStart: false,
                 countdown: true,
@@ -283,10 +266,7 @@ AppAsset::register($this);
             });
 
 
-            /*
-            Start timer triggers the counter.
-             */
-
+            // Start timer triggers the counter.
             $('#startTimer').click(function () {
                 clockObj.setTime(defaultTimeVariables.pomoroDuration);
                 started = true;
@@ -296,9 +276,7 @@ AppAsset::register($this);
                 $('#startTimer').attr('disabled',true);
             });
 
-            /*
-            Stop timer stops the counter.
-             */
+            // Stop timer stops the counter.
             $('#stopTimer').click(function () {
                 clockObj.stop();
                 $('#alert-text').html('Start your pomodoros!!!');
@@ -309,9 +287,7 @@ AppAsset::register($this);
                 clockObj.setTime(defaultTimeVariables.pomoroDuration);
             });
 
-            /*
-            Below method updates the default config values for counter.
-             */
+            // Below method updates the default config values for counter stored in cookies.
             $('#configForm').validator().on('submit', function (e) {
                 e.preventDefault();
                 $('#myModal').modal('hide');

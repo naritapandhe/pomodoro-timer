@@ -33,7 +33,7 @@ AppAsset::register($this);
                 max-width: 1000px;
             }
             .container-narrow > hr {
-                margin: 30px 0;
+                margin: 10px 0;
             }
 
             /* Main marketing message and sign up button */
@@ -71,12 +71,12 @@ AppAsset::register($this);
 
 	<div class="wrap">
         <div class="container-narrow masthead">
-            <ul class="nav nav-pills pull-right">
+            <!-- <ul class="nav nav-pills pull-right">
                 <li><a href="/site/timer"><h5 class="muted">Home</h5></a></li>
                 <li><a href="/site/about"><h5 class="muted">About</h5></a></li>
                 <li><a href='/site/login'><h5 class="muted">Login</h5></a></li>
-                <!--<li><a href="#">Contact</a></li>-->
-            </ul>
+                <!--<li><a href="#">Contact</a></li>
+            </ul> -->
             <h2>Pomodoro Timer</h2>
         </div>
 
@@ -132,10 +132,32 @@ AppAsset::register($this);
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/flipclock.min.js"></script>
     <script src="/js/ion.sound.min.js"></script>
+    <script src="/js/js.cookie.js"></script>
+    <script src="http://1000hz.github.io/bootstrap-validator/dist/validator.min.js"></script>
+
 
     <script type="text/javascript">
 
         $(document).ready(function () {
+            Cookies.json = true;
+            var cookieVal = Cookies.get("defaultTimeVariables")
+            if (typeof cookieVal === "undefined"){
+                var defaultTimeVariables = new Object();
+                defaultTimeVariables.pomoroDuration = 8;
+                defaultTimeVariables.shortBreakDuration = 3;
+                defaultTimeVariables.longBreakDuration = 5;
+                defaultTimeVariables.rounds = 4;
+                Cookies.set("defaultTimeVariables", JSON.stringify(defaultTimeVariables), {expires: 1});
+            }else{
+                var defaultTimeVariables = cookieVal;
+            }
+
+            var currentPomodoroRounds = 0;
+            var pr = 0;
+            var sd = 0;
+            var ld = 0;
+            var started = false;
+
             ion.sound({
                 sounds: [
                     {
@@ -149,17 +171,6 @@ AppAsset::register($this);
                 preload: true
             });
 
-            var defaultTimeVariables = new Object();
-            defaultTimeVariables.pomoroDuration = 8;
-            defaultTimeVariables.shortBreakDuration = 3;
-            defaultTimeVariables.longBreakDuration = 5;
-            defaultTimeVariables.rounds = 4;
-            pr = 0;
-            sd = 0;
-            ld = 0;
-            started = false;
-
-            var currentPomodoroRounds = 0;
             var clockObj = $('.clock').FlipClock({
                 autoStart: false,
                 countdown: true,
@@ -203,7 +214,7 @@ AppAsset::register($this);
                                 started = true;
                                 currentPomodoroRounds = 0;
                                 clockObj.setTime(defaultTimeVariables.pomoroDuration);
-                                $('#alert-text').html('Pomodoro: #'+(currentPomodoroRounds+1))
+                                $('#alert-text').html('Pomodoro: #'+(currentPomodoroRounds+1));
                                 clockObj.start();
                             }
                         }
@@ -214,17 +225,39 @@ AppAsset::register($this);
             $('#startTimer').click(function () {
                 clockObj.setTime(defaultTimeVariables.pomoroDuration);
                 started = true;
-                $('#alert-text').html('Pomodoro: #'+(currentPomodoroRounds+1))
+                $('#alert-text').html('Pomodoro: #'+(currentPomodoroRounds+1));
                 clockObj.start();
 
             });
 
             $('#stopTimer').click(function () {
                 started = false;
-                clockObj.stop()
-                $('#alert-text').html('Start your pomodoros!!!')
+                clockObj.stop();
+                $('#alert-text').html('Start your pomodoros!!!');
                 clockObj.reset()
             });
+
+
+            $('#configForm').validator().on('submit', function (e) {
+                e.preventDefault();
+                $('#myModal').modal('hide');
+                pomodoroDuration = parseInt($('#pomodoroDuration').val());
+                shortBreakDuration = parseInt($('#shortBreakDuration').val());
+                longBreakDuration = parseInt($('#longBreakDuration').val());
+                totalRounds = parseInt($('#totalRounds').val());
+
+                if (
+                    (pomodoroDuration != null && pomodoroDuration > 0) &&
+                    (shortBreakDuration != null && shortBreakDuration >= 0) &&
+                    (longBreakDuration != null && longBreakDuration >= 0) &&
+                    (totalRounds != null && totalRounds >= 1)){
+                        defaultTimeVariables.pomoroDuration = pomodoroDuration * 60;
+                        defaultTimeVariables.shortBreakDuration = shortBreakDuration * 60;
+                        defaultTimeVariables.longBreakDuration = longBreakDuration * 60;
+                        defaultTimeVariables.rounds = totalRounds;
+                        Cookies.set("defaultTimeVariables", JSON.stringify(defaultTimeVariables),{expires:1});
+                }
+            })
 
 
         })

@@ -5,10 +5,10 @@
 
 use app\widgets\Alert;
 use yii\helpers\Html;
+use app\assets\AppAsset;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
 
 AppAsset::register($this);
 ?>
@@ -20,8 +20,6 @@ AppAsset::register($this);
 		<meta charset="<?= Yii::$app->charset ?>">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="/css/bootstrap.css" rel="stylesheet" media="screen">
-        <link href="/css/flipclock.css" rel="stylesheet">
         <style type="text/css">
             body {
                 padding-top: 20px;
@@ -61,8 +59,15 @@ AppAsset::register($this);
             .marketing p + h4 {
                 margin-top: 28px;
             }
+
+            .navbar-brand{
+                color: #0e0e0e !important;
+                font-size: 28px !important;
+                padding: 0px !important;
+                font-weight: bold !important;
+            }
+
         </style>
-        <link href="/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
         <?= Html::csrfMetaTags() ?>
 		<title><?= Html::encode($this->title) ?></title>
 		<?php $this->head() ?>
@@ -71,12 +76,40 @@ AppAsset::register($this);
 	<?php $this->beginBody() ?>
 
 	<div class="wrap">
-        <div class="container-narrow masthead">
-            <ul class="nav nav-pills pull-right">
-                <li><a href="/site/timer" class="muted">Home</a></li>
-                <li><a href='/site/login' class="muted">Login</a></li>
-            </ul>
-            <h2>Pomodoro Timer</h2>
+        <div class="container-narrow">
+            <div>
+				<?php
+				NavBar::begin([
+					'brandLabel' => Yii::$app->name,
+					'brandUrl' => Yii::$app->homeUrl,
+					'options' => [
+					        'class' => 'custom-navbar',
+                    ],
+
+
+				]);
+				echo Nav::widget([
+					'options' => ['class' => 'navbar-nav navbar-right'],
+					'items' => [
+						['label' => 'Home', 'url' => ['/site/index']],
+						Yii::$app->user->isGuest ? (
+						['label' => 'Login', 'url' => ['/site/login']]
+						) : (
+							'<li>'
+							. Html::beginForm(['/site/logout'], 'post')
+							. Html::submitButton(
+								'Logout (' . Yii::$app->user->identity->username . ')',
+								['class' => 'btn btn-link logout']
+							)
+							. Html::endForm()
+							. '</li>'
+						)
+					],
+				]);
+				NavBar::end();
+				?>
+            </div>
+            <hr>
         </div>
 
     	<div class="container">
@@ -96,10 +129,7 @@ AppAsset::register($this);
 	<?php $this->endBody() ?>
     <!-- Javascript imports start  -->
     <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/flipclock.min.js"></script>
-    <script src="/js/ion.sound.min.js"></script>
-    <script src="/js/js.cookie.js"></script>
+    <script src="/js/flipclock.js"></script>
     <script src="http://1000hz.github.io/bootstrap-validator/dist/validator.min.js"></script>
     <!-- Javascript imports end -->
 
@@ -210,7 +240,7 @@ AppAsset::register($this);
             // Check if timer was used before.
             //  - If yes, pull up same config values from cache
             //  - If not, initialize new object with default values.
-            var cookieVal = Cookies.get("defaultTimeVariables")
+            var cookieVal = Cookies.get("defaultTimeVariables");
             if (typeof cookieVal === "undefined"){
                 var defaultTimeVariables = new Object();
                 defaultTimeVariables.pomoroDuration = 20;
@@ -280,7 +310,7 @@ AppAsset::register($this);
             $('#stopTimer').click(function () {
                 clockObj.stop();
                 $('#alert-text').html('Start your pomodoros!!!');
-                clockObj.reset()
+                clockObj.reset();
                 $('#startTimer').attr('disabled',false);
                 $('#stopTimer').attr('disabled',true);
                 initializePomodoro();
@@ -313,7 +343,6 @@ AppAsset::register($this);
         })
 
     </script>
-
     </body>
 	</html>
 <?php $this->endPage() ?>

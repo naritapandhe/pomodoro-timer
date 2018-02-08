@@ -5,6 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+		'name'=>'Pomodoro Timer',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -13,9 +14,7 @@ $config = [
     ],
     'components' => [
         'request' => [
-			/*'parsers' => [
-				'application/json' => 'yii\web\JsonParser',
-			],*/
+
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'qgl5mmcuv7gh1iCdNk0esPVxxSZzJdcR',
         ],

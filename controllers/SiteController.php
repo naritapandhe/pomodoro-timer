@@ -62,7 +62,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('timer');
+        return $this->render('index');
     }
 
     /**
@@ -72,10 +72,7 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-    	echo "in actionlogin";
-    	die();
-
-        if (!Yii::$app->user->isGuest) {
+    	if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
@@ -99,68 +96,6 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
-	/**
-	 * Displays about page.
-	 *
-	 * @return string
-	 */
-	public function actionTimer()
-	{
-		return $this->render('timer');
-	}
-
-	public function actionSay($message = 'Hello')
-	{
-		echo "here";
-		die();
-
-		$response = Yii::$app->response;
-		$response->format = \yii\web\Response::FORMAT_JSON;
-		$response->data = ['message' => $message];
-		return $response;
-		//return $this->render('say', ['message' => $message]);
-	}
-
-	public function actionLogin2()
-	{
-		echo "actionLogin2";
-		die();
-
-		$response = Yii::$app->response;
-		$response->format = \yii\web\Response::FORMAT_JSON;
-		$response->data = ['message' => $message];
-		return $response;
-		//return $this->render('say', ['message' => $message]);
-	}
 
 
 }

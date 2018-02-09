@@ -6,9 +6,6 @@
 use app\widgets\Alert;
 use yii\helpers\Html;
 use app\assets\AppAsset;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 
 AppAsset::register($this);
 ?>
@@ -98,6 +95,7 @@ AppAsset::register($this);
 	<?php $this->endBody() ?>
     <!-- Javascript imports start  -->
     <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="/js/bootstrap.js"></script>
     <script src="/js/flipclock.js"></script>
     <script src="http://1000hz.github.io/bootstrap-validator/dist/validator.min.js"></script>
     <!-- Javascript imports end -->
@@ -288,8 +286,8 @@ AppAsset::register($this);
 
             // Below method updates the default config values for counter stored in cookies.
             $('#configForm').validator().on('submit', function (e) {
-                e.preventDefault();
                 $('#myModal').modal('hide');
+                e.preventDefault();
                 pomodoroDuration = parseInt($('#pomodoroDuration').val());
                 shortBreakDuration = parseInt($('#shortBreakDuration').val());
                 longBreakDuration = parseInt($('#longBreakDuration').val());

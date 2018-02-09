@@ -27,7 +27,6 @@ class AppAsset extends AssetBundle
         //'css/site.css',
     ];
     public $js = [
-		'js/bootstrap.js',
 		'js/ion.sound.js',
 		'js/js.cookie.js'
     ];

@@ -7,6 +7,8 @@
 
 * This web application is developed using: [Yii2 - PHP based MVC framework](http://www.yiiframework.com/doc-2.0/guide-index.html) and [Twitter Bootstrap](http://getbootstrap.com/2.3.2/). 
 If your time management strategy uses longer focussed bursts, you can customize the time blocks as well!
+
+* Why did I use Yii2 MVC Framework? Initially, I had planned to make this as a full blown app - wherein several users can log in and track how well are they doing. Unfortunately, due to time constraints, I ended up building it using just jQuery. But, now, since the framework is in place, it can be easily extended to support REST APIs as well.
 ---
 ### Folder Structure
 ```bash

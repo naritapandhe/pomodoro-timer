@@ -23,6 +23,6 @@ If your time management strategy uses longer focussed bursts, you can customize 
 ![Alt text](https://github.com/naritapandhe/pomodoro-timer/blob/master/web/img/pomo.png "Screenshot")
 ---
 ### Demo Video
-https://drive.google.com/file/d/1ddD-g9zwq5T_zXLJl1wplxO6lziZ8-Dg/view
+[https://drive.google.com/file/d/1ddD-g9zwq5T_zXLJl1wplxO6lziZ8-Dg/view](https://drive.google.com/file/d/1ddD-g9zwq5T_zXLJl1wplxO6lziZ8-Dg/view)
 ---
 
